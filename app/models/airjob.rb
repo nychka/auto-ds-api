@@ -1,4 +1,7 @@
 class Airjob < ApplicationRecord
+  extend ActsAsTree::TreeView
+  acts_as_tree order: 'job_name'
+
   ERROR = 'error'.freeze
   PROCESSING = 'processing'.freeze
   DONE = 'done'.freeze
