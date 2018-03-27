@@ -36,6 +36,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'dotenv-rails'
 gem 'faraday'
 gem 'acts_as_tree'
+gem 'active_model_serializers'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
