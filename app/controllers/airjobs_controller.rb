@@ -2,14 +2,14 @@ class AirjobsController < ApplicationController
   def index
     jobs = Airjob.all
 
-    render json: jobs, status: :ok
+    render json: jobs, each_serializer: AirjobSerializer, with_children: true, status: :ok
   end
 
   def show
     if job = Airjob.find_by(id: allowed_params[:id])
-      render json: job, status: :ok
+      render json: job, with_children: true, status: :ok
     else
-      render json: { error: "Could not find job with id #{allowed_params[:id]}"}, status: :not_found
+      render json: { error: "Could not find job with id #{allowed_params[:id]}" }, status: :not_found
     end
   end
 
@@ -25,6 +25,7 @@ class AirjobsController < ApplicationController
       render json: { error: 'Uprocessable entity' }, status: 422
     end
   end
+
   # PUT /airjobs/:job_id
   def update
     @job = Airjob.find allowed_params[:id]

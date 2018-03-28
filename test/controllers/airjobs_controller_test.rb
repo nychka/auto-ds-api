@@ -19,7 +19,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
     get "/airjobs/#{job.id}"
 
-    assert_response :ok, job
+    assert_response :ok, job.as_json
   end
 
   test 'show airjob with status 404' do
@@ -43,9 +43,8 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
   test 'Response body' do
     post "/airjobs/#{@job_name}"
-    body = Airjob.last.to_json
 
-    assert_equal @response.body, body
+    assert_equal @response.body, AirjobSerializer.new(Airjob.last).to_json
   end
 
   test 'Create new job' do
