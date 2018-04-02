@@ -1,10 +1,12 @@
 class AirjobsController < ApplicationController
+  # GET /airjobs
   def index
     jobs = Airjob.all
 
     render json: jobs, each_serializer: AirjobSerializer, with_children: true, status: :ok
   end
 
+  # GET /airjobs/:id
   def show
     if job = Airjob.find_by(id: allowed_params[:id])
       render json: job, with_children: true, status: :ok
@@ -14,32 +16,22 @@ class AirjobsController < ApplicationController
   end
 
   # POST /airjobs/:airflow_job
-  def init
-    @job = Airjob.new
-    @job.job_name = allowed_params[:airflow_job]
-    @job.status = Airjob::PROCESSING
+  def create
+    response = CreateService.new(allowed_params).call
 
-    if @job.save
-      render json: @job, status: 201
-    else
-      render json: { error: 'Uprocessable entity' }, status: 422
-    end
+    render json: response[:data], status: response[:status]
   end
 
   # PUT /airjobs/:job_id
   def update
-    @job = Airjob.find allowed_params[:id]
+    response = UpdateService.new(allowed_params[:id], allowed_params).call
 
-    if @job.update status: allowed_params[:status], result: allowed_params[:result]
-      render json: { job: @job }, status: 200
-    else
-      render json: { error: 'Uprocessable entity' }, status: 422
-    end
+    render json: response[:data], status: response[:status]
   end
 
   private
 
   def allowed_params
-    params.permit(:airflow_job, :id, :status, :result)
+    params.permit(:id, :job_name, :status, :result)
   end
 end

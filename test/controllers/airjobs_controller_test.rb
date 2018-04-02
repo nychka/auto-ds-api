@@ -67,4 +67,10 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
   end
+
+  test 'status 404 when updating job' do
+    put '/airjobs/0', params: { job_name: 'lost_job' }
+
+    assert_response :not_found
+  end
 end
