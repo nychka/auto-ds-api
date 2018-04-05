@@ -1,4 +1,4 @@
-class UpdateService
+class UpdateService < Airflow::BaseService
   def initialize(id, params)
     @id = id
     params.delete :id
@@ -7,17 +7,10 @@ class UpdateService
   end
 
   def call
-    begin
+    safe_call do
       job = Airjob.find @id
       job.update! @params
-      @response[:data] = job
-    rescue ActiveRecord::RecordNotFound => e
-      @response[:data] = e.message
-      @response[:status] = :not_found
-    rescue ActiveRecord::RecordInvalid => e
-      @response[:data] = e.message
-      @response[:status] = :unprocessable_entity
+      job
     end
-    @response
   end
 end
