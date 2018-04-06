@@ -48,6 +48,7 @@ group :development, :test do
   gem 'simplecov', require: false
   gem 'mocha'
   gem 'database_cleaner'
+  gem 'pry-rails'
 end
 
 group :development do

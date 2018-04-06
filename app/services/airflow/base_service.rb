@@ -2,6 +2,11 @@ module Airflow
   class BaseService
     attr_reader :response
 
+    ERRORS_MAP = { Faraday::ConnectionFailed => :service_unavailable,
+                   ActiveRecord::RecordNotFound => :not_found,
+                   ActiveRecord::RecordInvalid => :unprocessable_entity
+                 }.freeze
+
     def initialize
       @host = 'http://localhost:8080'
       @response = { data: nil, status: :ok }
@@ -22,15 +27,9 @@ module Airflow
         before_call
         @response[:data] = yield
         after_call
-      rescue Faraday::ConnectionFailed => e
+      rescue *ERRORS_MAP.keys => e
         @response[:data] = e.message
-        @response[:status] = :service_unavailable
-      rescue ActiveRecord::RecordNotFound => e
-        @response[:data] = e.message
-        @response[:status] = :not_found
-      rescue ActiveRecord::RecordInvalid => e
-        @response[:data] = e.message
-        @response[:status] = :unprocessable_entity
+        @response[:status] = ERRORS_MAP[e.class]
       end
       @response
     end
