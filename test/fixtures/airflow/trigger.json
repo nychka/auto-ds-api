@@ -1,0 +1,19 @@
+{
+  "airflow_cmd": "airflow trigger_dag --run_id test-run-id-1 --conf \"{\\\"execution_date\\\":\\\"2018-03-27T03:03:02\\\"}\" perform_upcase",
+  "arguments": {
+    "api": "trigger_dag",
+    "conf": "\"{\\\"execution_date\\\":\\\"2018-03-27T03:03:02\\\"}\"",
+    "dag_id": "perform_upcase",
+    "run_id": "test-run-id-1"
+  },
+  "call_time": "Fri, 30 Mar 2018 12:29:38 GMT",
+  "http_response_code": 200,
+  "output": {
+    "stderr": "",
+    "stdin": "",
+    "stdout": "b'[2018-03-30 12:31:15,966] {__init__.py:57} INFO - Using executor CeleryExecutor\\n'b'[2018-03-30 12:31:16,295] {models.py:167} INFO - Filling up the DagBag from /usr/local/airflow/dags\\n'b'[2018-03-30 12:31:16,312] {models.py:266} ERROR - Failed to import: /usr/local/airflow/dags/perform-with-subdag.py\\n'b'Traceback (most recent call last):\\n'b'  File \"/usr/local/lib/python3.6/site-packages/airflow/models.py\", line 263, in process_file\\n'b'    m = imp.load_source(mod_name, filepath)\\n'b'  File \"/usr/local/lib/python3.6/imp.py\", line 172, in load_source\\n'b'    module = _load(spec)\\n'b'  File \"<frozen importlib._bootstrap>\", line 675, in _load\\n'b'  File \"<frozen importlib._bootstrap>\", line 655, in _load_unlocked\\n'b'  File \"<frozen importlib._bootstrap_external>\", line 678, in exec_module\\n'b'  File \"<frozen importlib._bootstrap>\", line 205, in _call_with_frames_removed\\n'b'  File \"/usr/local/airflow/dags/perform-with-subdag.py\", line 4, in <module>\\n'b'    from airflow.operators import WhiteOrbitOperator\\n'b\"ImportError: cannot import name 'WhiteOrbitOperator'\\n\"b'[2018-03-30 12:31:16,626] {cli.py:185} INFO - Created <DagRun perform_upcase @ 2018-03-30 12:31:16: test-run-id-1, externally triggered: True>\\n'"
+  },
+  "post_arguments": {},
+  "response_time": "Fri, 30 Mar 2018 12:31:16 GMT",
+  "status": "OK"
+}

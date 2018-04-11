@@ -1,4 +1,4 @@
-class CreateService
+class CreateService < Airflow::BaseService
   def initialize(params)
     @job_name = params[:job_name]
     @status = params[:status] || Airjob::PROCESSING
@@ -7,12 +7,6 @@ class CreateService
   end
 
   def call
-    begin
-      @response[:data] = Airjob.create! @params
-    rescue ActiveRecord::RecordInvalid => e
-      @response[:data] = e.message
-      @response[:status] = :unprocessable_entity
-    end
-    @response
+    safe_call { Airjob.create! @params }
   end
 end

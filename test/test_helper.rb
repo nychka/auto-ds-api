@@ -13,6 +13,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'mocha/minitest'
+require 'database_cleaner'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
@@ -22,5 +23,17 @@ class ActiveSupport::TestCase
     root = File.dirname(__FILE__)
     file = File.read("#{root}/fixtures/#{name}.json")
     JSON.parse(file)
+  end
+
+  # airflow/list => Airflow::ListService
+  def mock_service(name)
+    response = fixture_json(name)
+    provider_mock = response_mock = mock('object')
+    response_mock.expects(:body).returns(response)
+    provider_mock.expects(:get).returns(response_mock)
+    klass_string = name.split("/").map{ |item| item.capitalize! }.join('::')
+    klass = Object.const_get(klass_string + "Service") 
+    klass.any_instance.stubs(:provider).returns(provider_mock)
+    response
   end
 end

@@ -1,14 +1,15 @@
 module Airflow
-  class RunService < BaseService
+  class TriggerService < BaseService
     def initialize(params)
       super()
       @dag_id = params[:job_name]
-      @task_id = params[:task_id]
+      @run_id = params[:run_id]
       @execution_date = params[:execution_date] || Date.new(2017, 1, 1).to_datetime
     end
 
     def before_call
-      @params = "/admin/rest_api/api?api=run&dag_id=#{@dag_id}&task_id=#{@task_id}&execution_date=#{@execution_date}"
+      run_conf_json = { execution_date: @execution_date }.to_json
+      @params = "/admin/rest_api/api?api=trigger_dag&dag_id=#{@dag_id}}&run_id=#{@run_id}&conf=#{run_conf_json}"
     end
 
     def call

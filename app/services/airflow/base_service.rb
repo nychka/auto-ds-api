@@ -8,10 +8,11 @@ module Airflow
     end
 
     def before_call; end
+    def after_call; end
 
     def provider
       Faraday.new(url: @host) do |faraday|
-        faraday.response :json
+        faraday.response :logger, ::Logger.new(STDOUT), bodies: true
         faraday.adapter Faraday.default_adapter
       end
     end
@@ -20,6 +21,7 @@ module Airflow
       begin
         before_call
         @response[:data] = yield
+        after_call
       rescue Faraday::ConnectionFailed => e
         @response[:data] = e.message
         @response[:status] = :service_unavailable

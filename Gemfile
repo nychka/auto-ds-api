@@ -47,6 +47,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'mocha'
+  gem 'database_cleaner'
 end
 
 group :development do

@@ -15,11 +15,11 @@ class AirjobsController < ApplicationController
     end
   end
 
-  # POST /airjobs/:airflow_job
+  # POST /airjobs/:job_name
   def create
-    response = CreateService.new(allowed_params).call
-
-    render json: response[:data], status: response[:status]
+    response = RunService.new(allowed_params).call
+    
+    render json: response.to_json, status: response[:status]
   end
 
   # PUT /airjobs/:job_id
