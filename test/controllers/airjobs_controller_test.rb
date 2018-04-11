@@ -30,25 +30,35 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
   # POST /airjobs/:airflow_job
   test 'status 201' do
+    mock_service('airflow/list')
+    mock_service('airflow/trigger')
+
     post "/airjobs/#{@job_name}"
 
     assert_response :created, id: Airjob.last.id, name: 'test'
   end
 
   test 'status 422' do
+    mock_service('airflow/list')
+
     post '/airjobs/!'
 
     assert_response :unprocessable_entity
   end
 
   test 'Response body' do
+    mock_service('airflow/list')
+    response = mock_service('airflow/trigger')
+
     post "/airjobs/#{@job_name}"
 
-    assert_equal @response.body, AirjobSerializer.new(Airjob.last).to_json
+    assert_equal @response.body, { data: response, status: :created }.to_json
   end
 
   test 'Create new job' do
-    assert_difference('Airjob.count') do
+    assert_difference('Airjob.count', 3) do
+      mock_service('airflow/list')
+      mock_service('airflow/trigger')
       post "/airjobs/#{@job_name}"
     end
   end
@@ -66,5 +76,11 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
     put "/airjobs/#{job.id}", params: { status: Airjob::DONE }
 
     assert_response :unprocessable_entity
+  end
+
+  test 'status 404 when updating job' do
+    put '/airjobs/0', params: { job_name: 'lost_job' }
+
+    assert_response :not_found
   end
 end

@@ -35,6 +35,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 gem 'dotenv-rails'
 gem 'faraday'
+gem 'faraday_middleware'
 gem 'acts_as_tree'
 gem 'active_model_serializers'
 
@@ -45,6 +46,9 @@ group :development, :test do
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
+  gem 'mocha'
+  gem 'database_cleaner'
+  gem 'pry-rails'
 end
 
 group :development do

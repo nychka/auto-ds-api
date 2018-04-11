@@ -75,6 +75,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
+    database_cleaner (1.6.2)
     docile (1.3.0)
     dotenv (2.2.1)
     dotenv-rails (2.2.1)
@@ -84,6 +85,8 @@ GEM
     execjs (2.7.0)
     faraday (0.14.0)
       multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.12.2)
+      faraday (>= 0.7.4, < 1.0)
     ffi (1.9.23)
     formatador (0.2.5)
     globalid (0.4.1)
@@ -118,10 +121,13 @@ GEM
     lumberjack (1.0.12)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
+    metaclass (0.0.4)
     method_source (0.9.0)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
+    mocha (1.4.0)
+      metaclass (~> 0.0.1)
     multi_json (1.13.1)
     multipart-post (2.0.0)
     mysql2 (0.4.10)
@@ -138,6 +144,8 @@ GEM
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
+    pry-rails (0.3.6)
+      pry (>= 0.10.4)
     public_suffix (3.0.2)
     puma (3.11.3)
     rack (2.0.4)
@@ -246,13 +254,17 @@ DEPENDENCIES
   byebug
   capybara (~> 2.13)
   coffee-rails (~> 4.2)
+  database_cleaner
   dotenv-rails
   faraday
+  faraday_middleware
   guard
   guard-minitest
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
+  mocha
   mysql2 (>= 0.3.18, < 0.5)
+  pry-rails
   puma (~> 3.7)
   rack-cors
   rails (~> 5.1.5)
