@@ -8,7 +8,6 @@ module Airflow
                  }.freeze
 
     def initialize
-      @host = 'http://10.6.193.162:8080/'
       @response = { data: nil, status: :ok }
     end
 
@@ -16,7 +15,7 @@ module Airflow
     def after_call; end
 
     def provider
-      Faraday.new(url: @host) do |faraday|
+      Faraday.new(url: ENV['AUTO_DS_AIRFLOW_HOST']) do |faraday|
         faraday.response :logger, ::Logger.new(STDOUT), bodies: true
         faraday.adapter Faraday.default_adapter
       end
