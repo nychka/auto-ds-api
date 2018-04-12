@@ -8,7 +8,7 @@ module Airflow
                  }.freeze
 
     def initialize
-      @host = 'http://localhost:8080'
+      @host = 'http://10.6.193.162:8080/'
       @response = { data: nil, status: :ok }
     end
 
