@@ -33,7 +33,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
     mock_service('airflow/list')
     mock_service('airflow/trigger')
 
-    post "/airjobs/#{@job_name}"
+    post "/airjobs/", params: {job_name: @job_name}
 
     assert_response :created, id: Airjob.last.id, name: 'test'
   end
@@ -41,7 +41,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
   test 'status 422' do
     mock_service('airflow/list')
 
-    post '/airjobs/!'
+    post '/airjobs/', params: {job_name: "!"}
 
     assert_response :unprocessable_entity
   end
@@ -50,7 +50,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
     mock_service('airflow/list')
     response = mock_service('airflow/trigger')
 
-    post "/airjobs/#{@job_name}"
+    post "/airjobs/", params: {job_name: @job_name}
 
     assert_equal @response.body, { data: response, status: :created }.to_json
   end
@@ -59,7 +59,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Airjob.count', 3) do
       mock_service('airflow/list')
       mock_service('airflow/trigger')
-      post "/airjobs/#{@job_name}"
+      post "/airjobs/", params: {job_name: @job_name}
     end
   end
 
