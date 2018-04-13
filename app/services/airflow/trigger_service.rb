@@ -9,7 +9,7 @@ module Airflow
 
     def before_call
       run_conf_json = { execution_date: @execution_date }.to_json
-      @params = "/admin/rest_api/api?api=trigger_dag&dag_id=#{@dag_id}}&run_id=#{@run_id}&conf=#{run_conf_json}"
+      @params = "/admin/rest_api/api?api=trigger_dag&dag_id=#{@dag_id}&run_id=#{@run_id}&conf=#{run_conf_json}"
     end
 
     def call
