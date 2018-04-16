@@ -15,7 +15,7 @@ module Airflow
     def after_call; end
 
     def provider
-      Faraday.new(url: ENV['AUTO_DS_AIRFLOW_HOST']) do |faraday|
+      Faraday.new(url: ENV['AIRFLOW_WEBSERVER_HOST']) do |faraday|
         faraday.response :logger, ::Logger.new(STDOUT), bodies: true
         faraday.adapter Faraday.default_adapter
       end
@@ -29,6 +29,7 @@ module Airflow
       rescue *ERRORS_MAP.keys => e
         @response[:data] = e.message
         @response[:status] = ERRORS_MAP[e.class]
+      rescue RuntimeError
       end
       @response
     end

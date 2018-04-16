@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class CreateServiceTest < ActiveSupport::TestCase
-  # call
   test 'status 200 when create job with valid data' do
     response = CreateService.new(job_name: 'test_service').call
 
@@ -13,5 +12,13 @@ class CreateServiceTest < ActiveSupport::TestCase
     error_message = "Validation failed: Job name can't be blank, Job name is invalid"
 
     assert_equal({ data: error_message, status: :unprocessable_entity }, response)
+  end
+
+  test 'create job with children' do
+    children = [{ job_name: 'child-1' }, { job_name: 'child-2' }]
+
+    assert_difference 'Airjob.count', 3 do
+      CreateService.new({ job_name: 'parent' }, children).call
+    end
   end
 end

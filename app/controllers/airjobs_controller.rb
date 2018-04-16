@@ -15,7 +15,7 @@ class AirjobsController < ApplicationController
     end
   end
 
-  # POST /airjobs/:job_name
+  # POST /airjobs
   def create
     response = RunService.new(allowed_params).call
     
@@ -24,7 +24,7 @@ class AirjobsController < ApplicationController
 
   # PUT /airjobs/:job_id
   def update
-    response = UpdateService.new(allowed_params[:id], allowed_params).call
+    response = UpdateService.new(allowed_params).call
 
     render json: response[:data], status: response[:status]
   end

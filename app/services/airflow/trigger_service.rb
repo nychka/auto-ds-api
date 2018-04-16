@@ -1,9 +1,9 @@
 module Airflow
   class TriggerService < BaseService
-    def initialize(params)
+    def initialize(job, params = {})
       super()
-      @dag_id = params[:job_name]
-      @run_id = params[:run_id]
+      @dag_id = job.job_name
+      @run_id = job.id
       @execution_date = params[:execution_date] || Date.new(2017, 1, 1).to_datetime
     end
 

@@ -1,15 +1,16 @@
 class UpdateService < Airflow::BaseService
-  def initialize(id, params)
-    @id = id
-    params.delete :id
+  attr_accessor :params
+
+  def initialize(params)
     @params = params
     @response = { data: nil, status: :ok }
   end
 
   def call
     safe_call do
-      job = Airjob.find @id
-      job.update! @params
+      job = Airjob.find params[:id]
+      params.delete :id
+      job.update! params
       job
     end
   end
