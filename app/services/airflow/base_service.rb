@@ -8,7 +8,7 @@ module Airflow
                  }.freeze
 
     def initialize
-      @host = 'http://10.6.193.162:8080/'
+      @host = ENV.fetch('AIRFLOW_WEBSERVER_HOST','http://10.6.193.162:8080/')
       @response = { data: nil, status: :ok }
     end
 
