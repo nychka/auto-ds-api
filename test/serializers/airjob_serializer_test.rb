@@ -2,9 +2,9 @@ require 'test_helper'
 
 class AirjobSerializerTest < ActiveSupport::TestCase
   test 'tree with three levels' do
-    parent = airjobs(:valid)
-    son = parent.children.create job_name: 'son', status: Airjob::PROCESSING
-    grandson = son.children.create job_name: 'grandson', status: Airjob::PROCESSING
+    parent = Airjob.create job_name: 'parent'
+    son = parent.children.create job_name: 'son', status: Airjob.statuses[:processing]
+    grandson = son.children.create job_name: 'grandson', status: Airjob.statuses[:processing]
     parent_hash = AirjobSerializer.new(parent).serializable_hash
     son_hash = AirjobSerializer.new(son).serializable_hash
     grandson_hash = AirjobSerializer.new(grandson).serializable_hash

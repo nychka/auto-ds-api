@@ -1,5 +1,5 @@
 class CreateService < Airflow::BaseService
-  attr_reader :children, :job
+  attr_reader :children, :airjob, :params
 
   def initialize(params, children = [])
     @params = params
@@ -10,26 +10,18 @@ class CreateService < Airflow::BaseService
   def call
     safe_call do 
     	build_children if children.any?
-    	job.save!
-    	job
+    	airjob.save!
+    	airjob
     end
   end
 
   private 
 
-  def params
-    status = @params[:status] || Airjob::PROCESSING
-    { job_name: @params[:job_name], status: status }
-  end
-
-  def job
-  	@job ||= Airjob.new params
+  def airjob
+  	@airjob ||= Airjob.new params
   end
 
   def build_children
-  	children.each do |child|
-  		child[:status] = Airjob::PROCESSING
-  		job.children.build child
-  	end
+  	children.each { |child| airjob.children.build child }
   end
 end

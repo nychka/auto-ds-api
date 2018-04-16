@@ -1,19 +1,9 @@
 class Airjob < ApplicationRecord
   extend ActsAsTree::TreeView
   acts_as_tree order: 'job_name'
-
-  ERROR = 'error'.freeze
-  PROCESSING = 'processing'.freeze
-  DONE = 'done'.freeze
-
-  STATUSES = [ERROR, PROCESSING, DONE]
+  enum status: { idle: 0, processing: 1, done: 2, error: 3 }
 
   validates :job_name, :status, presence: true
   validates :job_name, format: /[\w\-\_]+/
-  validates :status, inclusion: { in: STATUSES }
-  validates :result, presence: true, on: :update, if: 'success?'
-
-  def success?
-    status == DONE
-  end
+  validates :result, presence: true, on: :update, if: 'done?'
 end

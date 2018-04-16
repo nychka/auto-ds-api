@@ -4,7 +4,8 @@ module Airflow
 
     ERRORS_MAP = { Faraday::ConnectionFailed => :service_unavailable,
                    ActiveRecord::RecordNotFound => :not_found,
-                   ActiveRecord::RecordInvalid => :unprocessable_entity
+                   ActiveRecord::RecordInvalid => :unprocessable_entity,
+                   ArgumentError => :unprocessable_entity
                  }.freeze
 
     def response

@@ -6,7 +6,7 @@ module Airflow
       @children = [{ job_name: 'wo_print_date1' }, { job_name: 'wo_print_date2' }]
     end
 
-    test 'check if job exists' do
+    test 'list airjob children' do
       mock_service('airflow/list')
       response = ListService.new(job_name: @job_name).call
 

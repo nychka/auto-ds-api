@@ -14,7 +14,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
   # GET /airjobs/:id
   test 'show airjob with status 200' do
-    job = airjobs(:valid)
+    job = Airjob.new job_name: @job_name
     job.save
 
     get "/airjobs/#{job.id}"
@@ -65,15 +65,15 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
   # PUT /airjobs/:id
   test 'status 200' do
-    job = Airjob.create job_name: @job_name, status: Airjob::PROCESSING
-    put "/airjobs/#{job.id}", params: { status: Airjob::DONE, result: '/file/path' }
+    job = Airjob.create job_name: @job_name
+    put "/airjobs/#{job.id}", params: { status: 'done', result: '/file/path' }
 
     assert_response :ok
   end
 
   test 'status 422 when updating status without result' do
-    job = Airjob.create job_name: @job_name, status: Airjob::PROCESSING
-    put "/airjobs/#{job.id}", params: { status: Airjob::DONE }
+    job = Airjob.create job_name: @job_name
+    put "/airjobs/#{job.id}", params: { status: 'done' }
 
     assert_response :unprocessable_entity
   end
