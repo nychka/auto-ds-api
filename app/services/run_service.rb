@@ -1,45 +1,48 @@
 class RunService < Airflow::BaseService
+  attr_reader :airjob_params
 
-  def initialize(params)
-    @job_name = params[:job_name]
-    @response = { data: nil, status: :created }
-  end
-
-  def check
-    response = Airflow::ListService.new(job_name: @job_name).call
-
-    if (response[:status] != :ok) || !response[:data].respond_to?(:each)
-      raise Faraday::ConnectionFailed.new(response[:data])
-    end
-
-    response[:data]
-  end
-
-  def create(children)
-    response = CreateService.new({ job_name: @job_name }, children).call
-
-    if (response[:status] != :created)
-      @response[:status] = response[:status]
-      raise response[:data]
-    end
-
-    response[:data]
-  end
-
-  def run(job)
-    response = Airflow::TriggerService.new(job).call
-
-    unless response[:status] == :ok 
-      raise Faraday::ConnectionFailed.new(response[:data])
-    end
-    response[:data]
+  def initialize(airjob_params)
+    @airjob_params = airjob_params
+    response[:status] = :created
   end
 
   def call
     safe_call do
-      children = check
-      job = create(children)
-      run(job)
+      airjob_children = check_airjob_children
+      airjob = create(airjob_children)
+      run(airjob)
     end
+  end
+
+  private
+
+  def check_airjob_children
+    resp = Airflow::ListService.new(airjob_params).call
+
+    if (resp[:status] != :ok) || !resp[:data].respond_to?(:each)
+      raise Faraday::ConnectionFailed.new(resp[:data])
+    end
+
+    resp[:data]
+  end
+
+  def create(airjob_children)
+    resp = CreateService.new(airjob_params, airjob_children).call
+
+    if (resp[:status] != :created)
+      response[:status] = resp[:status]
+      raise resp[:data]
+    end
+
+    resp[:data]
+  end
+
+  def run(airjob)
+    resp = Airflow::TriggerService.new(airjob).call
+
+    unless resp[:status] == :ok 
+      raise Faraday::ConnectionFailed.new(resp[:data])
+    end
+    resp[:data]
   end
 end

@@ -22,7 +22,7 @@ class AirjobsController < ApplicationController
     render json: response.to_json, status: response[:status]
   end
 
-  # PUT /airjobs/:job_id
+  # PUT /airjobs/:id
   def update
     response = UpdateService.new(allowed_params).call
 

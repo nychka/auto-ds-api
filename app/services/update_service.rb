@@ -3,7 +3,6 @@ class UpdateService < Airflow::BaseService
 
   def initialize(params)
     @params = params
-    @response = { data: nil, status: :ok }
   end
 
   def call

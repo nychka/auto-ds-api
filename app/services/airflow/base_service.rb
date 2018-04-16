@@ -1,14 +1,14 @@
 module Airflow
   class BaseService
-    attr_reader :response
+    attr_accessor :response
 
     ERRORS_MAP = { Faraday::ConnectionFailed => :service_unavailable,
                    ActiveRecord::RecordNotFound => :not_found,
                    ActiveRecord::RecordInvalid => :unprocessable_entity
                  }.freeze
 
-    def initialize
-      @response = { data: nil, status: :ok }
+    def response
+      @response ||= { data: nil, status: :ok }
     end
 
     def before_call; end
@@ -24,14 +24,14 @@ module Airflow
     def safe_call
       begin
         before_call
-        @response[:data] = yield
+        response[:data] = yield
         after_call
       rescue *ERRORS_MAP.keys => e
-        @response[:data] = e.message
-        @response[:status] = ERRORS_MAP[e.class]
+        response[:data] = e.message
+        response[:status] = ERRORS_MAP[e.class]
       rescue RuntimeError
       end
-      @response
+      response
     end
   end
 end
