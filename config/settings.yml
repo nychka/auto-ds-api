@@ -1,5 +1,5 @@
 default: &default
-  airflow:
+  airflow: &airflow
     host: <%= ENV.fetch("AIRFLOW_WEBSERVER_HOST", "localhost:8080") %>
     filename_pattern: !ruby/regexp "/wo_[a-z0-9_]+/"
     api:
@@ -9,6 +9,7 @@ default: &default
 staging:
   <<: *default
   airflow:
+    <<: *airflow
     host: <%= ENV.fetch("AIRFLOW_WEBSERVER_HOST", "http://10.6.193.162:8080/") %>
 
 development:

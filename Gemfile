@@ -16,11 +16,14 @@ gem 'faraday_middleware'
 gem 'acts_as_tree'
 gem 'active_model_serializers'
 
-group :development, :test do
+group :development, :test, :staging do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'pry-rails'
+end
+
+group :test do
   gem 'simplecov', require: false
   gem 'mocha'
-  gem 'pry-rails'
 end
 
 group :development do
