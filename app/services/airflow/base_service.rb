@@ -5,7 +5,8 @@ module Airflow
     ERRORS_MAP = { Faraday::ConnectionFailed => :service_unavailable,
                    ActiveRecord::RecordNotFound => :not_found,
                    ActiveRecord::RecordInvalid => :unprocessable_entity,
-                   ArgumentError => :unprocessable_entity
+                   ArgumentError => :unprocessable_entity,
+                   RuntimeError => :unprocessable_entity
                  }.freeze
 
     def response
@@ -34,7 +35,6 @@ module Airflow
       rescue *ERRORS_MAP.keys => e
         response[:data] = e.message
         response[:status] = ERRORS_MAP[e.class]
-      rescue RuntimeError
       end
       response
     end
