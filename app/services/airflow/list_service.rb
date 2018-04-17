@@ -1,25 +1,32 @@
 module Airflow
   class ListService < BaseService
+    attr_reader :params, :dag_id
+    attr_accessor :request_url
+
     def initialize(params)
-      super()
+      @params = params
       @dag_id = params[:job_name]
     end
 
     def before_call
-      @params = "/admin/rest_api/api?api=list_tasks&dag_id=#{@dag_id}"
+      request_url = settings['api']['list_tasks'] % { dag_id: dag_id }
     end
 
     def call
-      safe_call do
-        provider.get(@params).body
-      end
+      safe_call { provider.get(request_url).body }
     end
 
     def after_call
-      if @response[:data]['output'] && @response[:data]['output']['stdout']
-        children = @response[:data]['output']['stdout'].scan /wo_[a-z0-9_]+/
-        @response[:data] = children.map{ |job| { job_name: job } }
-      end
+      airjob_children = output.scan settings['filename_pattern']
+      response[:data] = airjob_children.map{ |child| { job_name: child } }
+    end
+
+    private
+
+    def output
+      raise 'Check response structure!' unless response[:data]['output'] && response[:data]['output']['stdout']
+      
+      response[:data]['output']['stdout']
     end
   end
 end

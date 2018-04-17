@@ -5,13 +5,21 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+if Airjob.count != 0
+	p "Seeds will NOT create untill database is dirty! Maybe you have already create seeds!"
+	exit 1
+end
 
 airjobs = [
-    { 'job_name': 'foo-1',  "status": "processing", "result": nil },
-    { 'job_name': 'foo-2',  "status": "done", "result": '/usr/bin/file.txt' },
-    { 'job_name': 'foo-3',  "status": "processing", "result": nil },
-    { 'job_name': 'foo-4',  "status": "failed", "result": nil },
-    { 'job_name': 'foo-5',  "status": "processing", "result": nil },
+    { 'job_name': 'foo',  "status": "idle", "result": nil },
+    { 'job_name': 'bar',  "status": "done", "result": '/usr/bin/file.txt' },
+    { 'job_name': 'parent',  "status": "processing", "result": nil }
+]
+
+children = [
+  { 'job_name': 'child-1',  "status": "error", "result": nil },
+  { 'job_name': 'child-2',  "status": "done", "result": '/dev/null' }
 ]
 
 Airjob.create(airjobs)
+Airjob.last.children.create children

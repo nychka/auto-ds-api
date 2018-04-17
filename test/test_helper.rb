@@ -1,19 +1,20 @@
-require 'simplecov'
-SimpleCov.start do
-  add_filter '/test'
-  add_filter '/config'
+if ENV['INCLUDE_COVERAGE']
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/test'
+    add_filter '/config'
 
-  add_group 'Models', 'app/models'
-  add_group 'Controllers', 'app/controllers'
-  add_group 'Helpers', 'app/helpers'
-  add_group 'Services', 'app/services'
-end
+    add_group 'Models', 'app/models'
+    add_group 'Controllers', 'app/controllers'
+    add_group 'Helpers', 'app/helpers'
+    add_group 'Services', 'app/services'
+  end
+end  
 
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'mocha/minitest'
-require 'database_cleaner'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
