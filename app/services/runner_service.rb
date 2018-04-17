@@ -1,4 +1,4 @@
-class RunService < Airflow::BaseService
+class RunnerService < Airflow::BaseService
   attr_reader :airjob_params
 
   def initialize(airjob_params)
@@ -27,7 +27,7 @@ class RunService < Airflow::BaseService
   end
 
   def create(airjob_children)
-    resp = CreateService.new(airjob_params, airjob_children).call
+    resp = CreatorService.new(airjob_params, airjob_children).call
 
     if (resp[:status] != :created)
       response[:status] = resp[:status]

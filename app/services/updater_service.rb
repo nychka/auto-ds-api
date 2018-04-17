@@ -1,4 +1,4 @@
-class UpdateService < Airflow::BaseService
+class UpdaterService < Airflow::BaseService
   attr_accessor :params
 
   def initialize(params)

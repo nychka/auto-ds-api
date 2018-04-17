@@ -1,4 +1,4 @@
-class CreateService < Airflow::BaseService
+class CreatorService < Airflow::BaseService
   attr_reader :children, :airjob, :params
 
   def initialize(params, children = [])
