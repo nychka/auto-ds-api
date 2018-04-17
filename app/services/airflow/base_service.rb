@@ -16,10 +16,14 @@ module Airflow
     def after_call; end
 
     def provider
-      Faraday.new(url: ENV['AIRFLOW_WEBSERVER_HOST']) do |faraday|
+      Faraday.new(url: settings['host']) do |faraday|
         faraday.response :logger, ::Logger.new(STDOUT), bodies: true
         faraday.adapter Faraday.default_adapter
       end
+    end
+
+    def settings
+      Settings['airflow']
     end
 
     def safe_call

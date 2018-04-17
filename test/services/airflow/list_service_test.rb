@@ -8,7 +8,7 @@ module Airflow
 
     test 'list airjob children' do
       mock_service('airflow/list')
-      response = ListService.new(job_name: @job_name).call
+      response = ListService.new(job_name: 'wo_parent').call
 
       assert_equal({ data: @children, status: :ok }, response)
     end

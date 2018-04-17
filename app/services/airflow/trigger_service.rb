@@ -1,15 +1,11 @@
 module Airflow
   class TriggerService < BaseService
-    attr_reader :job, :params, :request_url
+    attr_reader :job, :params
 
     def initialize(job, params = {})
       @job = job
       @params = params
       response[:status] = :ok
-    end
-
-    def before_call
-      request_url = "/admin/rest_api/api?api=trigger_dag&dag_id=#{dag_id}}&run_id=#{run_id}&conf=#{settings}"
     end
 
     def call
@@ -27,11 +23,16 @@ module Airflow
     end
 
     def execution_date
-      params[:execution_date] || Date.new(2017, 1, 1).to_datetime
+      params[:execution_date] || Date.yesterday.to_datetime
     end
 
-    def settings
+    def configs
       { execution_date: execution_date }.to_json
+    end
+
+    def request_url
+      request_params = { dag_id: dag_id, run_id: run_id, configs: configs }
+      settings['api']['trigger_dag'] % request_params
     end
   end
 end
