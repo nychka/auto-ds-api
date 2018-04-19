@@ -10,25 +10,29 @@ module Airflow
       @params = { execution_date: @execution_date }
     end
 
-    test 'status 200 when run job' do
+    test 'gets status 200 when trigger remote job' do
       data = fixture_json('airflow/trigger')
       provider_mock = response_mock = mock('object')
-      provider_mock.expects(:get).returns(response_mock)
       response_mock.expects(:body).returns(data)
+      provider_mock.expects(:get).returns(response_mock)
       TriggerService.any_instance.stubs(:provider).returns(provider_mock)
       response = TriggerService.new(airjob, params).call
 
-      assert_equal(data, response[:data])
-      assert_equal :ok, response[:status]
+      assert_equal(data, response)
     end
 
-    test 'status 500 when server is not responding' do
+    test 'raises ConnectionFailed' do
+      error_message = 'ooops'
       mock = mock('object')
-      mock.expects(:get).raises(Faraday::ConnectionFailed.new('ooops'))
+      mock.expects(:get).raises(Faraday::ConnectionFailed.new(error_message))
       TriggerService.any_instance.stubs(:provider).returns(mock)
-      response = TriggerService.new(airjob, params).call
 
-      assert_equal :service_unavailable, response[:status]
+      err = assert_raises ConnectionFailed do
+        response = TriggerService.new(airjob, params).call
+      end
+
+      assert_equal error_message, err.message
+      assert_equal :service_unavailable, err.status
     end
   end
 end

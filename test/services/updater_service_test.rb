@@ -14,22 +14,28 @@ class UpdateServiceTest < ActiveSupport::TestCase
     params[:result] = '/usr/bin/nowhere'
     response = UpdaterService.new(params).call
 
-    assert_equal({ data: airjob.reload, status: :ok }, response)
+    assert_equal airjob.reload, response
   end
 
-  test 'status 404 when could not find job by id' do
+  test 'raises RecordNotFound when could not find job by id' do
     params[:id] = 0
-    response = UpdaterService.new(params).call
+    error = assert_raises RecordNotFound do
+      UpdaterService.new(params).call
+    end
     error_message = "Couldn't find Airjob with 'id'=0"
 
-    assert_equal({ data: error_message, status: :not_found }, response)
+    assert_equal error_message, error.message
+    assert_equal :not_found, error.status
   end
 
-  test 'status 422 when updating job with invalid data' do
+  test 'raises RecordInvalid when updating job with invalid data' do
     params[:status] = 'INVALID_STATUS'
-    response = UpdaterService.new(@params).call
+    error = assert_raises RecordInvalid do
+      UpdaterService.new(@params).call
+    end
     error_message = "'INVALID_STATUS' is not a valid status"
 
-    assert_equal({ data: error_message, status: :unprocessable_entity }, response)
+    assert_equal error_message, error.message
+    assert_equal :unprocessable_entity, error.status
   end
 end

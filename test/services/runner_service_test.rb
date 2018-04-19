@@ -13,6 +13,6 @@ class RunServiceTest < ActiveSupport::TestCase
     children_list = Airjob.find_by(job_name: @job_name).children.pluck(:job_name)
 
     assert_equal @job_children_list, children_list
-    assert_equal trigger_response, response[:data]
+    assert_equal trigger_response, response
   end
 end

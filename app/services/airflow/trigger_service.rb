@@ -5,11 +5,10 @@ module Airflow
     def initialize(job, params = {})
       @job = job
       @params = params
-      response[:status] = :ok
     end
 
-    def call
-      safe_call { provider.get(request_url).body }
+    def handle
+      provider.get(request_url).body
     end
 
     private 

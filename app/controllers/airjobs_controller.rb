@@ -19,14 +19,14 @@ class AirjobsController < ApplicationController
   def create
     response = RunnerService.new(allowed_params).call
     
-    render json: response.to_json, status: response[:status]
+    render json: response.to_json, status: :created
   end
 
   # PUT /airjobs/:id
   def update
     response = UpdaterService.new(allowed_params).call
 
-    render json: response[:data], status: response[:status]
+    render json: response, status: :ok
   end
 
   private

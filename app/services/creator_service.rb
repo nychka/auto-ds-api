@@ -4,15 +4,12 @@ class CreatorService < Airflow::BaseService
   def initialize(params, children = [])
     @params = params
     @children = children
-    response[:status] = :created
   end
 
-  def call
-    safe_call do 
-    	build_children if children.any?
-    	airjob.save!
-    	airjob
-    end
+  def handle
+  	build_children if children.any?
+  	airjob.save!
+  	airjob
   end
 
   private 

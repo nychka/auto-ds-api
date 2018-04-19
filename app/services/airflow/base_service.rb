@@ -1,20 +1,20 @@
 module Airflow
   class BaseService
-    attr_accessor :response
-
-    ERRORS_MAP = { Faraday::ConnectionFailed => :service_unavailable,
-                   ActiveRecord::RecordNotFound => :not_found,
-                   ActiveRecord::RecordInvalid => :unprocessable_entity,
-                   ArgumentError => :unprocessable_entity,
-                   RuntimeError => :unprocessable_entity
-                 }.freeze
-
-    def response
-      @response ||= { data: nil, status: :ok }
+    def handle
+      raise 'You have to implement handle method!'
     end
 
-    def before_call; end
-    def after_call; end
+    def call
+      begin
+        handle
+      rescue Faraday::ConnectionFailed => e
+        raise ::ConnectionFailed.new(e)
+      rescue ActiveRecord::RecordNotFound => e
+        raise ::RecordNotFound.new(e)
+      rescue ActiveRecord::RecordInvalid, ArgumentError => e
+        raise ::RecordInvalid.new(e)
+      end
+    end
 
     def provider
       Faraday.new(url: settings['host']) do |faraday|
@@ -25,18 +25,6 @@ module Airflow
 
     def settings
       Settings['airflow']
-    end
-
-    def safe_call
-      begin
-        before_call
-        response[:data] = yield
-        after_call
-      rescue *ERRORS_MAP.keys => e
-        response[:data] = e.message
-        response[:status] = ERRORS_MAP[e.class]
-      end
-      response
     end
   end
 end

@@ -7,25 +7,31 @@ module Airflow
       @dag_id = params[:job_name]
     end
 
-    def call
-      safe_call { provider.get(request_url).body }
-    end
-
-    def after_call
-      airjob_children = output.scan settings['filename_pattern']
-      response[:data] = airjob_children.map{ |child| { job_name: child } }
+    def handle
+      response = provider.get(request_url).body
+      airjob_children = parse(response)
+      structurize(airjob_children)
     end
 
     private
 
-    def output
-      raise 'Check response structure!' unless response[:data]['output'] && response[:data]['output']['stdout']
-      
-      response[:data]['output']['stdout']
-    end
-
     def request_url
       settings['api']['list_tasks'] % { dag_id: dag_id }
+    end
+
+    def parse(response)
+      case response['http_response_code']
+      when 200  
+        response['output']['stdout'].scan settings['filename_pattern']
+      when 400
+        raise ::ResourceNotFound.new(response['output'])
+      else
+        raise response['output']
+      end
+    end
+
+    def structurize(children)
+      children.map{ |child| { job_name: child } }
     end
   end
 end

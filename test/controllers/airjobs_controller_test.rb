@@ -52,7 +52,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
     post "/airjobs/", params: { job_name: @job_name }
 
-    assert_equal @response.body, { data: response, status: :created }.to_json
+    assert_equal @response.body, response.to_json
   end
 
   test 'Create new job' do
