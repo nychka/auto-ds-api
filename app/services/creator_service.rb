@@ -6,7 +6,7 @@ class CreatorService < Airflow::BaseService
     @children = children
   end
 
-  def handle
+  def call
   	build_children if children.any?
   	airjob.save!
   	airjob

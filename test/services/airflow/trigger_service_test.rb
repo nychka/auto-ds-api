@@ -27,12 +27,11 @@ module Airflow
       mock.expects(:get).raises(Faraday::ConnectionFailed.new(error_message))
       TriggerService.any_instance.stubs(:provider).returns(mock)
 
-      err = assert_raises ConnectionFailed do
+      err = assert_raises Faraday::ConnectionFailed do
         response = TriggerService.new(airjob, params).call
       end
 
       assert_equal error_message, err.message
-      assert_equal :service_unavailable, err.status
     end
   end
 end

@@ -5,7 +5,7 @@ class RunnerService < Airflow::BaseService
     @airjob_params = airjob_params
   end
 
-  def handle
+  def call
     airjob_children = Airflow::ListService.new(airjob_params).call
     airjob = CreatorService.new(airjob_params, airjob_children).call
     Airflow::TriggerService.new(airjob).call

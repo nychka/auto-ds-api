@@ -16,12 +16,11 @@ class CreatorServiceTest < ActiveSupport::TestCase
   end
 
   test 'raises RecordInvalid when create job with invalid data' do
-    error = assert_raises RecordInvalid do
+    error = assert_raises ActiveRecord::RecordInvalid do
       CreatorService.new(job_name: '').call
     end
     error_message = "Validation failed: Job name can't be blank, Job name is invalid"
 
     assert_equal error_message, error.message
-    assert_equal :unprocessable_entity, error.status
   end
 end

@@ -1,19 +1,7 @@
 module Airflow
   class BaseService
-    def handle
-      raise 'You have to implement handle method!'
-    end
-
     def call
-      begin
-        handle
-      rescue Faraday::ConnectionFailed => e
-        raise ::ConnectionFailed.new(e)
-      rescue ActiveRecord::RecordNotFound => e
-        raise ::RecordNotFound.new(e)
-      rescue ActiveRecord::RecordInvalid, ArgumentError => e
-        raise ::RecordInvalid.new(e)
-      end
+     raise 'You have to implement call method!'
     end
 
     def provider

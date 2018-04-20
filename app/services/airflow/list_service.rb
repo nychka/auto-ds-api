@@ -7,7 +7,7 @@ module Airflow
       @dag_id = params[:job_name]
     end
 
-    def handle
+    def call
       response = provider.get(request_url).body
       airjob_children = parse(response)
       structurize(airjob_children)
@@ -24,7 +24,7 @@ module Airflow
       when 200  
         response['output']['stdout'].scan settings['filename_pattern']
       when 400
-        raise ::ResourceNotFound.new(response['output'])
+        raise Faraday::ResourceNotFound.new(response['output'])
       else
         raise response['output']
       end

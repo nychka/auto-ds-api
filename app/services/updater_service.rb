@@ -5,10 +5,10 @@ class UpdaterService < Airflow::BaseService
     @params = params
   end
 
-  def handle
-      job = Airjob.find params[:id]
-      params.delete :id
-      job.update! params
-      job
+  def call
+    job = Airjob.find params[:id]
+    params.delete :id
+    job.update! params
+    job
   end
 end

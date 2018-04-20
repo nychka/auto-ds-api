@@ -20,12 +20,11 @@ module Airflow
       provider_mock.expects(:get).raises(Faraday::ConnectionFailed.new(error_message))
       ListService.any_instance.stubs(:provider).returns(provider_mock)
 
-      err = assert_raises ConnectionFailed do
+      err = assert_raises Faraday::ConnectionFailed do
         ListService.new(@parent).call
       end
 
       assert_equal error_message, err.message
-      assert_equal :service_unavailable, err.status
     end
 
     test 'raises ResourceNotFound' do
@@ -37,12 +36,11 @@ module Airflow
       provider_mock.expects(:get).returns(response_mock)
       ListService.any_instance.stubs(:provider).returns(provider_mock)
 
-      err = assert_raises ResourceNotFound do
+      err = assert_raises Faraday::ResourceNotFound do
         ListService.new(@parent).call
       end
 
       assert_equal response['output'], err.message
-      assert_equal :not_found, err.status
     end
   end
 end

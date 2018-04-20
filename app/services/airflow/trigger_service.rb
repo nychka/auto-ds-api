@@ -7,7 +7,7 @@ module Airflow
       @params = params
     end
 
-    def handle
+    def call
       provider.get(request_url).body
     end
 
