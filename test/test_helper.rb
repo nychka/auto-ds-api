@@ -9,7 +9,7 @@ if ENV['INCLUDE_COVERAGE']
     add_group 'Helpers', 'app/helpers'
     add_group 'Services', 'app/services'
   end
-end  
+end
 
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -32,8 +32,8 @@ class ActiveSupport::TestCase
     provider_mock = response_mock = mock('object')
     response_mock.expects(:body).returns(response)
     provider_mock.expects(:get).returns(response_mock)
-    klass_string = name.split("/").map{ |item| item.capitalize! }.join('::')
-    klass = Object.const_get(klass_string + "Service") 
+    klass_string = name.split('/').map(&:capitalize!).join('::')
+    klass = Object.const_get(klass_string + 'Service')
     klass.any_instance.stubs(:provider).returns(provider_mock)
     response
   end

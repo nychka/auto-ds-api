@@ -9,7 +9,7 @@ class AirjobsController < ApplicationController
   # GET /airjobs/:id
   def show
     job = Airjob.find allowed_params[:id]
-    
+
     render json: job, with_children: true, status: :ok
   end
 

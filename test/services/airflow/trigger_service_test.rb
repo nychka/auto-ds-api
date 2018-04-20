@@ -6,7 +6,7 @@ module Airflow
 
     setup do
       @execution_date = Date.new(2017, 1, 1).to_datetime
-      @airjob = Airjob.create({ job_name: 'perform_upcase' })
+      @airjob = Airjob.create(job_name: 'perform_upcase')
       @params = { execution_date: @execution_date }
     end
 
@@ -28,7 +28,7 @@ module Airflow
       TriggerService.any_instance.stubs(:provider).returns(mock)
 
       err = assert_raises Faraday::ConnectionFailed do
-        response = TriggerService.new(airjob, params).call
+        TriggerService.new(airjob, params).call
       end
 
       assert_equal error_message, err.message

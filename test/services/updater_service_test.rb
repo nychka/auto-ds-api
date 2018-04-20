@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UpdateServiceTest < ActiveSupport::TestCase
-  attr_reader   :airjob
+  attr_reader :airjob
   attr_accessor :params
 
   setup do

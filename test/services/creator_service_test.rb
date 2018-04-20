@@ -11,7 +11,7 @@ class CreatorServiceTest < ActiveSupport::TestCase
     children = [{ job_name: 'child-1' }, { job_name: 'child-2' }]
 
     assert_difference 'Airjob.count', 3 do
-      CreatorService.new({job_name: 'parent' }, children).call
+      CreatorService.new({ job_name: 'parent' }, children).call
     end
   end
 

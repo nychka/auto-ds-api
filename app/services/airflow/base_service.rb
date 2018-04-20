@@ -1,7 +1,7 @@
 module Airflow
   class BaseService
     def call
-     raise 'You have to implement call method!'
+      fail 'You have to implement call method!'
     end
 
     def provider

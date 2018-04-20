@@ -8,10 +8,23 @@ module Airflow
     end
 
     def call
-      provider.get(request_url).body
+      handle { provider.get(request_url).body }
     end
 
-    private 
+    def handle
+      response = yield
+
+      case response['http_response_code']
+      when 200
+        job.processing!
+      when 400..500
+        job.error!
+        fail response['output']
+      end
+      response
+    end
+
+    private
 
     def dag_id
       job.job_name

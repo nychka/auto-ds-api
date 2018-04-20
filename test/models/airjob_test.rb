@@ -29,7 +29,7 @@ class AirjobTest < ActiveSupport::TestCase
 
     assert_raises ArgumentError do
       airjob.update status: 'not_valid_status'
-    end 
+    end
   end
 
   test 'is valid when status done and result not null' do

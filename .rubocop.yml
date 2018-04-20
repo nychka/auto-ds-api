@@ -20,5 +20,3 @@ Lint/AssignmentInCondition:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
-Rails:
- Enabled: true

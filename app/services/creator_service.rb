@@ -7,18 +7,18 @@ class CreatorService < Airflow::BaseService
   end
 
   def call
-  	build_children if children.any?
-  	airjob.save!
-  	airjob
+    build_children if children.any?
+    airjob.save!
+    airjob
   end
 
-  private 
+  private
 
   def airjob
-  	@airjob ||= Airjob.new params
+    @airjob ||= Airjob.new params
   end
 
   def build_children
-  	children.each { |child| airjob.children.build child }
+    children.each { |child| airjob.children.build child }
   end
 end

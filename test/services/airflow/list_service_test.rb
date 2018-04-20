@@ -3,7 +3,7 @@ require 'test_helper'
 module Airflow
   class ListServiceTest < ActiveSupport::TestCase
     setup do
-      @parent = { job_name: 'wo_parent'}
+      @parent = { job_name: 'wo_parent' }
       @children = [{ job_name: 'wo_print_date1' }, { job_name: 'wo_print_date2' }]
     end
 

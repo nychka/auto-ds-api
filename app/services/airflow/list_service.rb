@@ -21,17 +21,17 @@ module Airflow
 
     def parse(response)
       case response['http_response_code']
-      when 200  
+      when 200
         response['output']['stdout'].scan settings['filename_pattern']
       when 400
-        raise Faraday::ResourceNotFound.new(response['output'])
+        fail Faraday::ResourceNotFound, response['output']
       else
-        raise response['output']
+        fail response['output']
       end
     end
 
     def structurize(children)
-      children.map{ |child| { job_name: child } }
+      children.map { |child| { job_name: child } }
     end
   end
 end
