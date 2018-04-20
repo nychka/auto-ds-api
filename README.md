@@ -13,5 +13,6 @@ $ `curl localhost:3000/airjobs`
 
 ## [FOR DEVELOPERS]
 
-### Install pre-commit hook
-$ `cp pre-commit.sh .git/hooks/pre-commit`
+### Install pre-commit hook 
+$ `cp pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`
+

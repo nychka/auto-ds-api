@@ -1,3 +1,2 @@
 #!/bin/bash
-rake test
-rubocop -R
+rake test && rubocop -R 
