@@ -1,6 +1,6 @@
 default: &default
   airflow: &airflow
-    host: <%= ENV.fetch("AIRFLOW_WEBSERVER_HOST", "localhost:8080") %>
+    host: <%= ENV.fetch("AIRFLOW_WEBSERVER_HOST", "http://localhost:8080") %>
     filename_pattern: !ruby/regexp "/wo_[a-z0-9_]+/"
     api:
       list_tasks: /admin/rest_api/api?api=list_tasks&dag_id=%{dag_id}

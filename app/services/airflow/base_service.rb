@@ -19,6 +19,7 @@ module Airflow
     def provider
       Faraday.new(url: settings['host']) do |faraday|
         faraday.response :logger, ::Logger.new(STDOUT), bodies: true
+        faraday.response :json
         faraday.adapter Faraday.default_adapter
       end
     end
