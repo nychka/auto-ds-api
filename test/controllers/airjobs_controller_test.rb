@@ -14,7 +14,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
 
   # GET /airjobs/:id
   test 'show airjob with status 200' do
-    job = airjobs(:valid)
+    job = Airjob.new job_name: @job_name
     job.save
 
     get "/airjobs/#{job.id}"
@@ -33,7 +33,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
     mock_service('airflow/list')
     mock_service('airflow/trigger')
 
-    post "/airjobs/", params: {job_name: @job_name}
+    post '/airjobs/', params: { job_name: @job_name }
 
     assert_response :created, id: Airjob.last.id, name: 'test'
   end
@@ -41,7 +41,7 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
   test 'status 422' do
     mock_service('airflow/list')
 
-    post '/airjobs/', params: {job_name: "!"}
+    post '/airjobs/', params: { job_name: '!' }
 
     assert_response :unprocessable_entity
   end
@@ -50,30 +50,30 @@ class AirjobsControllerTest < ActionDispatch::IntegrationTest
     mock_service('airflow/list')
     response = mock_service('airflow/trigger')
 
-    post "/airjobs/", params: {job_name: @job_name}
+    post '/airjobs/', params: { job_name: @job_name }
 
-    assert_equal @response.body, { data: response, status: :created }.to_json
+    assert_equal @response.body, response.to_json
   end
 
   test 'Create new job' do
     assert_difference('Airjob.count', 3) do
       mock_service('airflow/list')
       mock_service('airflow/trigger')
-      post "/airjobs/", params: {job_name: @job_name}
+      post '/airjobs/', params: { job_name: @job_name }
     end
   end
 
   # PUT /airjobs/:id
   test 'status 200' do
-    job = Airjob.create job_name: @job_name, status: Airjob::PROCESSING
-    put "/airjobs/#{job.id}", params: { status: Airjob::DONE, result: '/file/path' }
+    job = Airjob.create job_name: @job_name
+    put "/airjobs/#{job.id}", params: { status: 'done', result: '/file/path' }
 
     assert_response :ok
   end
 
   test 'status 422 when updating status without result' do
-    job = Airjob.create job_name: @job_name, status: Airjob::PROCESSING
-    put "/airjobs/#{job.id}", params: { status: Airjob::DONE }
+    job = Airjob.create job_name: @job_name
+    put "/airjobs/#{job.id}", params: { status: 'done' }
 
     assert_response :unprocessable_entity
   end

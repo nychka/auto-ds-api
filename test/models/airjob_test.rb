@@ -1,59 +1,47 @@
 require 'test_helper'
 
 class AirjobTest < ActiveSupport::TestCase
+  attr_reader :airjob
+
   setup do
+    @airjob = Airjob.new
   end
 
-  test 'is valid when has job_name and status' do
-    assert airjobs(:valid).save
+  test 'is valid when has job_name' do
+    airjob.job_name = 'foo'
+
+    assert airjob.save
+  end
+
+  test 'is not valid when has invalid job_name' do
+    airjob.job_name = '!'
+
+    assert_not airjob.save
   end
 
   test 'is not valid without job_name' do
-    assert_not airjobs(:not_valid_without_job_name).save
+    assert_not airjob.save
   end
 
-  test 'is not valid without status' do
-    assert_not airjobs(:not_valid_without_status).save
+  test 'raises error when updates with invalid status' do
+    airjob.job_name = 'test'
+    airjob.save
+
+    assert_raises ArgumentError do
+      airjob.update status: 'not_valid_status'
+    end
   end
 
-  test 'is valid status when is included' do
-    assert airjobs(:valid).save
+  test 'is valid when status done and result not null' do
+    airjob.job_name = 'foo'
+    airjob.save
+
+    assert airjob.update(status: 'done', result: 'file_path')
   end
 
-  test 'is not valid status when is included' do
-    assert_not airjobs(:not_valid_status).save
-  end
+  test 'is not valid when status done and result null' do
+    airjob.save
 
-  test 'success? when status eql DONE' do
-    job = airjobs(:status_done)
-
-    assert job.success?
-  end
-
-  test 'success? when status not eql DONE' do
-    job = airjobs(:not_valid_status)
-
-    assert_not job.success?
-  end
-
-  test 'is valid with result when updating' do
-    job = airjobs(:valid)
-    job.save
-
-    assert job.update(status: Airjob::DONE, result: 'file_path')
-  end
-
-  test 'is not valid with result null' do
-    job = airjobs(:valid)
-    job.save
-
-    assert_not job.update(status: Airjob::DONE)
-  end
-
-  test 'is valid with result null and status not DONE' do
-    job = airjobs(:valid)
-    job.save
-
-    assert job.update(status: Airjob::ERROR)
+    assert_not airjob.update(status: 'done')
   end
 end

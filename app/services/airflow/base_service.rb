@@ -1,37 +1,19 @@
 module Airflow
   class BaseService
-    attr_reader :response
-
-    ERRORS_MAP = { Faraday::ConnectionFailed => :service_unavailable,
-                   ActiveRecord::RecordNotFound => :not_found,
-                   ActiveRecord::RecordInvalid => :unprocessable_entity
-                 }.freeze
-
-    def initialize
-      @host = ENV.fetch('AIRFLOW_WEBSERVER_HOST','http://10.6.193.162:8080/')
-      @response = { data: nil, status: :ok }
+    def call
+      fail 'You have to implement call method!'
     end
 
-    def before_call; end
-    def after_call; end
-
     def provider
-      Faraday.new(url: @host) do |faraday|
+      Faraday.new(url: settings['host']) do |faraday|
         faraday.response :logger, ::Logger.new(STDOUT), bodies: true
+        faraday.response :json
         faraday.adapter Faraday.default_adapter
       end
     end
 
-    def safe_call
-      begin
-        before_call
-        @response[:data] = yield
-        after_call
-      rescue *ERRORS_MAP.keys => e
-        @response[:data] = e.message
-        @response[:status] = ERRORS_MAP[e.class]
-      end
-      @response
+    def settings
+      Settings['airflow']
     end
   end
 end

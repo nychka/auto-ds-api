@@ -8,25 +8,23 @@ class AirjobsController < ApplicationController
 
   # GET /airjobs/:id
   def show
-    if job = Airjob.find_by(id: allowed_params[:id])
-      render json: job, with_children: true, status: :ok
-    else
-      render json: { error: "Could not find job with id #{allowed_params[:id]}" }, status: :not_found
-    end
+    job = Airjob.find allowed_params[:id]
+
+    render json: job, with_children: true, status: :ok
   end
 
-  # POST /airjobs/:job_name
+  # POST /airjobs
   def create
-    response = RunService.new(allowed_params).call
-    
-    render json: response.to_json, status: response[:status]
+    response = RunnerService.new(allowed_params).call
+
+    render json: response.to_json, status: :created
   end
 
-  # PUT /airjobs/:job_id
+  # PUT /airjobs/:id
   def update
-    response = UpdateService.new(allowed_params[:id], allowed_params).call
+    response = UpdaterService.new(allowed_params).call
 
-    render json: response[:data], status: response[:status]
+    render json: response, status: :ok
   end
 
   private

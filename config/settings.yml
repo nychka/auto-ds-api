@@ -1,0 +1,26 @@
+default: &default
+  airflow: &airflow
+    host: <%= ENV.fetch("AIRFLOW_WEBSERVER_HOST", "http://localhost:8080") %>
+    filename_pattern: !ruby/regexp "/wo_[a-z0-9_]+/"
+    api:
+      list_tasks: /admin/rest_api/api?api=list_tasks&dag_id=%{dag_id}
+      trigger_dag: /admin/rest_api/api?api=trigger_dag&dag_id=%{dag_id}&run_id=%{run_id}&conf=%{configs}
+  errors:
+    http_statuses:
+      default:                      !ruby/sym internal_server_error
+      Faraday::ConnectionFailed:    !ruby/sym service_unavailable
+      Faraday::ResourceNotFound:    !ruby/sym not_found
+      ActiveRecord::RecordNotFound: !ruby/sym not_found
+      ActiveRecord::RecordInvalid:  !ruby/sym unprocessable_entity
+
+staging:
+  <<: *default
+  airflow:
+    <<: *airflow
+    host: <%= ENV.fetch("AIRFLOW_WEBSERVER_HOST", "http://10.6.193.162:8080/") %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default

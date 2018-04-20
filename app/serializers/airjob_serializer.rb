@@ -1,5 +1,5 @@
 class AirjobSerializer < ActiveModel::Serializer
-  attributes :job_name, :status, :result
+  attributes :id, :job_name, :status, :result
   has_many :children, include: true, if: -> { with_children? }
 
   def children

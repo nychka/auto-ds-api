@@ -1,25 +1,37 @@
 module Airflow
   class ListService < BaseService
+    attr_reader :params, :dag_id
+
     def initialize(params)
-      super()
+      @params = params
       @dag_id = params[:job_name]
     end
 
-    def before_call
-      @params = "/admin/rest_api/api?api=list_tasks&dag_id=#{@dag_id}"
-    end
-
     def call
-      safe_call do
-        provider.get(@params).body
+      response = provider.get(request_url).body
+      airjob_children = parse(response)
+      structurize(airjob_children)
+    end
+
+    private
+
+    def request_url
+      settings['api']['list_tasks'] % { dag_id: dag_id }
+    end
+
+    def parse(response)
+      case response['http_response_code']
+      when 200
+        response['output']['stdout'].scan settings['filename_pattern']
+      when 400
+        fail Faraday::ResourceNotFound, response['output']
+      else
+        fail response['output']
       end
     end
 
-    def after_call
-      if @response[:data]['output'] && @response[:data]['output']['stdout']
-        children = @response[:data]['output']['stdout'].scan /wo_[a-z0-9_]+/
-        @response[:data] = children.map{ |job| { job_name: job } }
-      end
+    def structurize(children)
+      children.map { |child| { job_name: child } }
     end
   end
 end

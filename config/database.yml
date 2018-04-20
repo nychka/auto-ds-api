@@ -17,6 +17,10 @@ default: &default
   username: <%= ENV.fetch("AUTO_DS_API_DB_USER", "root") %>
   password: <%= ENV.fetch("AUTO_DS_API_DB_PASSWORD", "password") %>
 
+staging:
+  <<: *default
+  database: db/auto-ds-api_staging.sqlite3
+
 development:
   <<: *default
   database: db/auto-ds-api_development.sqlite3
